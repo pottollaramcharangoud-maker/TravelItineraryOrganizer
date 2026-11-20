@@ -1,0 +1,41 @@
+id,destination,start_date,end_date,category,notes,estimated_cost,status,created_at
+1,"Amsterdam, Netherlands",2027-01-21,2027-01-23,Family,Budget under review,4233.75,Completed,2026-11-20T20:03:04
+2,"Himalayas, Nepal",2026-09-23,2026-09-28,Business,Budget under review,831.18,Completed,2026-11-20T20:03:04
+3,"Bali, Indonesia",2026-09-06,2026-09-08,Leisure,Conference attendance,2648.32,Planned,2026-11-20T20:03:04
+4,Singapore,2026-11-26,2026-12-02,Family,Museums and local cuisine,2354.37,Completed,2026-11-20T20:03:04
+5,"Kerala, India",2026-11-07,2026-11-09,Leisure,Client meetings scheduled,0.0,Completed,2026-11-20T20:03:04
+6,"Kerala, India",2027-03-12,2027-03-30,Cultural,Early-bird discount applied,701.17,Cancelled,2026-11-20T20:03:04
+7,"Bangkok, Thailand",2026-12-06,2026-12-15,Solo,Adventure trekking expedition,517.6,Cancelled,2026-11-20T20:03:04
+8,"Paris, France",2027-04-12,2027-05-02,Business,Early-bird discount applied,214.31,Cancelled,2026-11-20T20:03:04
+9,"London, UK",2027-05-10,2027-05-25,Business,Awaiting visa approval,711.34,Booked,2026-11-20T20:03:04
+10,"Cairo, Egypt",2026-12-26,2027-01-05,Family,Awaiting visa approval,1024.47,Cancelled,2026-11-20T20:03:04
+11,"Sydney, Australia",2026-12-01,2026-12-08,Cultural,Museums and local cuisine,786.68,Cancelled,2026-11-20T20:03:04
+12,"Kerala, India",2026-11-23,2026-12-01,Cultural,Early-bird discount applied,10000.0,Booked,2026-11-20T20:03:04
+13,"Cape Town, South Africa",2026-10-14,2026-10-19,Leisure,Budget under review,279.28,In Progress,2026-11-20T20:03:04
+14,"Amsterdam, Netherlands",2026-10-11,2026-10-24,Business,Awaiting visa approval,284.49,Cancelled,2026-11-20T20:03:04
+15,"Paris, France",2027-03-17,2027-04-03,Business,Family vacation planned,4081.06,Completed,2026-11-20T20:03:04
+16,"Dubai, UAE",2026-09-29,2026-10-05,Business,Awaiting visa approval,2663.94,Booked,2026-11-20T20:03:04
+17,Singapore,2027-02-18,2027-03-11,Business,Weekend getaway with friends,1063.22,Planned,2026-11-20T20:03:04
+18,"Rome, Italy",2027-01-17,2027-01-19,Business,Beach resort stay,3647.88,In Progress,2026-11-20T20:03:04
+19,"Istanbul, Turkey",2027-02-15,2027-02-27,Leisure,Weekend getaway with friends,4211.02,Completed,2026-11-20T20:03:04
+20,"Tokyo, Japan",2027-01-16,2027-01-16,Adventure,Flexible travel dates,2362.59,Booked,2026-11-20T20:03:04
+21,"Himalayas, Nepal",2027-02-06,2027-02-15,Solo,Early-bird discount applied,1802.18,Cancelled,2026-11-20T20:03:04
+22,"Cape Town, South Africa",2027-05-07,2027-05-28,Solo,Museums and local cuisine,105.44,In Progress,2026-11-20T20:03:04
+23,"London, UK",2026-11-03,2026-11-20,Family,Museums and local cuisine,366.21,Booked,2026-11-20T20:03:04
+24,"Cape Town, South Africa",2026-10-10,2026-10-19,Leisure,Family vacation planned,4327.46,In Progress,2026-11-20T20:03:04
+25,"Goa, India",2027-05-29,2027-06-04,Cultural,Conference attendance,3936.15,Booked,2026-11-20T20:03:04
+26,"London, UK",2026-11-04,2026-11-25,Business,Flexible travel dates,1698.0,In Progress,2026-11-20T20:03:04
+27,"Dubai, UAE",2026-11-16,2026-11-18,Cultural,Conference attendance,442.99,In Progress,2026-11-20T20:03:04
+28,"Himalayas, Nepal",2027-06-04,2027-06-14,Leisure,Museums and local cuisine,2536.08,Booked,2026-11-20T20:03:04
+29,"Cairo, Egypt",2026-09-18,2026-09-30,Business,Family vacation planned,2863.61,In Progress,2026-11-20T20:03:04
+30,"London, UK",2027-01-08,2027-01-15,Solo,Flexible travel dates,143.65,Completed,2026-11-20T20:03:04
+31,"Himalayas, Nepal",2027-04-10,2027-04-15,Adventure,Conference attendance,833.33,Planned,2026-11-20T20:03:04
+32,"Bali, Indonesia",2027-04-04,2027-04-22,Solo,Awaiting visa approval,1995.8,Completed,2026-11-20T20:03:04
+33,"Himalayas, Nepal",2027-05-12,2027-05-25,Leisure,Adventure trekking expedition,3876.06,Planned,2026-11-20T20:03:04
+34,"Amsterdam, Netherlands",2027-02-07,2027-02-26,Cultural,Awaiting visa approval,1525.18,Cancelled,2026-11-20T20:03:04
+35,"Himalayas, Nepal",2027-02-21,2027-03-06,Adventure,Weekend getaway with friends,3789.47,Cancelled,2026-11-20T20:03:04
+36,"Paris, France",2027-05-20,2027-05-29,Solo,Museums and local cuisine,3532.67,Booked,2026-11-20T20:03:04
+37,"Rome, Italy",2027-05-12,2027-05-27,Family,Early-bird discount applied,895.26,Completed,2026-11-20T20:03:04
+38,"London, UK",2027-06-05,2027-06-14,Adventure,Adventure trekking expedition,2292.67,Completed,2026-11-20T20:03:04
+39,"Istanbul, Turkey",2026-09-19,2026-10-08,Business,Museums and local cuisine,1181.34,Booked,2026-11-20T20:03:04
+40,"Himalayas, Nepal",2026-11-25,2026-11-29,Leisure,Museums and local cuisine,1521.08,Planned,2026-11-20T20:03:04
