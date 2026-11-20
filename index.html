@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Travel Itinerary Organizer</title>
+  <style>
+    :root { --ink:#0f172a; --muted:#64748b; --accent:#0ea5e9; --bg:#f8fafc; }
+    * { box-sizing:border-box; }
+    body { margin:0; font-family:Segoe UI,system-ui,-apple-system,sans-serif; background:var(--bg); color:var(--ink); }
+    header { background:linear-gradient(135deg,#0ea5e9,#2563eb); color:#fff; padding:64px 24px; text-align:center; }
+    header h1 { margin:0 0 12px; font-size:2.6rem; }
+    header p { margin:0 auto; max-width:640px; font-size:1.1rem; opacity:.92; }
+    .actions { margin-top:28px; display:flex; gap:12px; justify-content:center; flex-wrap:wrap; }
+    .btn { display:inline-block; padding:12px 22px; border-radius:8px; text-decoration:none; font-weight:600; }
+    .btn.primary { background:#fff; color:#0369a1; }
+    .btn.ghost { background:transparent; color:#fff; border:2px solid #fff; }
+    main { max-width:1040px; margin:0 auto; padding:48px 24px; }
+    h2 { font-size:1.6rem; margin:0 0 20px; }
+    .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:18px; }
+    .card { background:#fff; border:1px solid #e2e8f0; border-radius:12px; padding:22px; box-shadow:0 2px 8px rgba(15,23,42,.04); }
+    .card h3 { margin:0 0 8px; font-size:1.05rem; color:#0369a1; }
+    .card p { margin:0; color:var(--muted); font-size:.94rem; line-height:1.55; }
+    pre { background:#0f172a; color:#e2e8f0; padding:18px; border-radius:10px; overflow-x:auto; }
+    code { font-family:Consolas,monospace; }
+    footer { text-align:center; color:var(--muted); padding:32px 24px; border-top:1px solid #e2e8f0; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Travel Itinerary Organizer</h1>
+    <p>A focused Python application to organize destinations, dates, notes and estimated costs with validation, local persistence and actionable summaries. Built for StudentLife Hack, Project #52.</p>
+    <div class="actions">
+      <a class="btn primary" href="https://github.com/pottollaramcharangoud-maker/TravelItineraryOrganizer">View on GitHub</a>
+      <a class="btn ghost" href="#run">Run locally</a>
+    </div>
+  </header>
+  <main>
+    <h2>Features</h2>
+    <div class="grid">
+      <div class="card"><h3>Interactive console &amp; GUI</h3><p>Menu-driven terminal interface plus a full Tkinter desktop application with sortable tables and dialogs.</p></div>
+      <div class="card"><h3>Defensive validation</h3><p>Looping input wrappers and domain checks reject invalid dates, costs, categories and statuses.</p></div>
+      <div class="card"><h3>Local persistence</h3><p>JSON/CSV storage that survives restarts and automatically recovers from corrupted files.</p></div>
+      <div class="card"><h3>Search &amp; filtering</h3><p>Keyword, category and status filters for fast retrieval of stored itineraries.</p></div>
+      <div class="card"><h3>Analytics</h3><p>Totals, averages, distributions and ASCII bar charts for at-a-glance insight.</p></div>
+      <div class="card"><h3>Threshold warnings</h3><p>Flags overdue trips, non-positive durations and costs above the configured limit.</p></div>
+      <div class="card"><h3>Multi-format export</h3><p>Markdown, CSV, JSON and plain-text audit log reports.</p></div>
+      <div class="card"><h3>Bulk import</h3><p>Ingest legacy CSV datasets with row-by-row validation error logs.</p></div>
+    </div>
+    <h2 id="run" style="margin-top:48px">Run locally</h2>
+    <pre><code>git clone https://github.com/pottollaramcharangoud-maker/TravelItineraryOrganizer.git
+cd TravelItineraryOrganizer
+python main.py        # terminal app
+python run_gui.py     # desktop GUI</code></pre>
+  </main>
+  <footer>StudentLife Hack &middot; Project #52 &middot; Python 3.10+ standard library</footer>
+</body>
+</html>
