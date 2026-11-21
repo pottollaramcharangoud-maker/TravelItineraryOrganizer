@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Travel Itinerary Organizer</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <div class="logo">T</div>
+      <div>
+        <h1>Travel Itinerary Organizer</h1>
+        <p>StudentLife Hack &middot; Project #52</p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <span class="badge" id="storageBadge">Local storage</span>
+      <a class="linkbtn" href="https://github.com/pottollaramcharangoud-maker/TravelItineraryOrganizer" target="_blank" rel="noopener">GitHub</a>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="toolbar">
+      <button class="btn primary" id="addBtn">+ Add trip</button>
+      <button class="btn" id="editBtn">Edit</button>
+      <button class="btn danger" id="deleteBtn">Delete</button>
+      <span class="divider"></span>
+      <button class="btn" id="seedBtn">Seed sample data</button>
+      <button class="btn" id="importBtn">Import CSV</button>
+      <input type="file" id="importFile" accept=".csv" hidden>
+      <span class="divider"></span>
+      <label class="selectlabel" for="exportKind">Export</label>
+      <select id="exportKind">
+        <option value="csv">CSV</option>
+        <option value="json">JSON</option>
+        <option value="md">Markdown</option>
+      </select>
+      <button class="btn" id="exportBtn">Download</button>
+    </section>
+
+    <nav class="tabs">
+      <button class="tab active" data-tab="trips">Trips</button>
+      <button class="tab" data-tab="summary">Summary &amp; Analytics</button>
+      <button class="tab" data-tab="warnings">Warnings <span class="pill" id="warningPill">0</span></button>
+    </nav>
+
+    <section class="panel active" id="panel-trips">
+      <div class="filters">
+        <input type="text" id="keyword" placeholder="Search destination or notes...">
+        <select id="categoryFilter"><option value="">All categories</option></select>
+        <select id="statusFilter"><option value="">All statuses</option></select>
+        <button class="btn ghost" id="clearBtn">Clear</button>
+        <span class="count" id="countLabel"></span>
+      </div>
+      <div class="tablewrap">
+        <table id="tripTable">
+          <thead>
+            <tr>
+              <th data-sort="id">ID</th>
+              <th data-sort="destination">Destination</th>
+              <th data-sort="start_date">Start</th>
+              <th data-sort="end_date">End</th>
+              <th data-sort="category">Category</th>
+              <th data-sort="estimated_cost">Cost</th>
+              <th data-sort="status">Status</th>
+              <th data-sort="timing">Timing</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <div class="pagination">
+        <button class="btn small" id="prevPage">Previous</button>
+        <span id="pageLabel"></span>
+        <button class="btn small" id="nextPage">Next</button>
+      </div>
+    </section>
+
+    <section class="panel" id="panel-summary">
+      <div class="metrics" id="metrics"></div>
+      <div class="charts" id="charts"></div>
+      <h3>Highest estimated costs</h3>
+      <div class="tablewrap"><table id="topTable"><thead><tr><th>Destination</th><th>Category</th><th>Cost</th><th>Status</th></tr></thead><tbody></tbody></table></div>
+    </section>
+
+    <section class="panel" id="panel-warnings">
+      <div class="tablewrap"><table id="warningTable"><thead><tr><th>ID</th><th>Destination</th><th>Warning</th></tr></thead><tbody></tbody></table></div>
+    </section>
+  </main>
+
+  <div class="modal" id="modal">
+    <div class="modalbox">
+      <h2 id="modalTitle">Add trip</h2>
+      <form id="tripForm">
+        <label>Destination *<input type="text" id="fDestination" maxlength="200"></label>
+        <div class="twocol">
+          <label>Start date *<input type="date" id="fStart"></label>
+          <label>End date *<input type="date" id="fEnd"></label>
+        </div>
+        <div class="twocol">
+          <label>Category *<select id="fCategory"></select></label>
+          <label>Status *<select id="fStatus"></select></label>
+        </div>
+        <label>Estimated cost *<input type="number" id="fCost" min="0" step="0.01"></label>
+        <label>Notes<textarea id="fNotes" maxlength="300" rows="3"></textarea></label>
+        <p class="formerror" id="formError"></p>
+        <div class="modalactions">
+          <button type="button" class="btn" id="cancelBtn">Cancel</button>
+          <button type="submit" class="btn primary">Save trip</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+  <script src="app.js"></script>
+</body>
+</html>
