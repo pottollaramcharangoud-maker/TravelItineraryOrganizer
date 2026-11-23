@@ -78,6 +78,17 @@ def test_category_mix(engine):
     assert engine.category_mix()["Leisure"] == 2
 
 
+def test_linear_forecast_extrapolates_trend(engine):
+    engine.service.add(fields("A", "2027-01-05", 100))
+    engine.service.add(fields("B", "2027-02-05", 200))
+    engine.service.add(fields("C", "2027-03-05", 300))
+    assert engine.linear_forecast() == 400.0
+
+
+def test_linear_forecast_empty(engine):
+    assert engine.linear_forecast() == 0.0
+
+
 def test_report_contains_all_sections(engine):
     engine.service.add(fields("A", "2027-01-05", 100))
     report = engine.report()

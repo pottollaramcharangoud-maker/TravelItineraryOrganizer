@@ -54,6 +54,23 @@ class InsightsEngine:
         costs = [trip.estimated_cost for trip in self.service.trips if trip.estimated_cost > 0]
         return len(upcoming) * (mean(costs) if costs else 0.0)
 
+    def linear_forecast(self):
+        points = self.monthly_spend()
+        if not points:
+            return 0.0
+        if len(points) == 1:
+            return points[0][1]
+        values = [value for _, value in points]
+        xs = list(range(len(values)))
+        x_mean = mean(xs)
+        y_mean = mean(values)
+        denominator = sum((x - x_mean) ** 2 for x in xs)
+        if denominator == 0:
+            return y_mean
+        slope = sum((x - x_mean) * (y - y_mean) for x, y in zip(xs, values)) / denominator
+        intercept = y_mean - slope * x_mean
+        return max(0.0, intercept + slope * len(xs))
+
     def category_mix(self):
         return Counter(trip.category for trip in self.service.trips)
 
@@ -67,6 +84,7 @@ class InsightsEngine:
             "anomalies": self.anomalies(),
             "upcoming": self.upcoming(),
             "forecast": self.forecast(),
+            "projected_spend": self.linear_forecast(),
             "category_mix": self.category_mix(),
             "busiest_month": self.busiest_month(),
         }

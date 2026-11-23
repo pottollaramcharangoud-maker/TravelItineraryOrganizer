@@ -1,0 +1,18 @@
+{
+  "name": "Travel Itinerary Organizer",
+  "short_name": "Trip Organizer",
+  "description": "Organize destinations, dates, notes and costs with validation, analytics and offline access.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f4f7fb",
+  "theme_color": "#0e70a5",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

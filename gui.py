@@ -1,3 +1,4 @@
+import copy
 import csv
 import os
 from datetime import datetime
@@ -143,12 +144,16 @@ class App(tk.Tk):
         self.category = tk.StringVar(value="All")
         self.status = tk.StringVar(value="All")
         self.export_kind = tk.StringVar(value="Markdown")
+        self.history = []
+        self.future = []
 
         self._build_header()
         self._build_toolbar()
         self._build_notebook()
         self._build_statusbar()
         self.refresh()
+        self.bind_all("<Control-z>", lambda event: self.undo())
+        self.bind_all("<Control-y>", lambda event: self.redo())
 
     def _build_header(self):
         header = ttk.Frame(self, padding=(14, 10))
@@ -160,6 +165,8 @@ class App(tk.Tk):
         bar = ttk.Frame(self, padding=(10, 4))
         bar.pack(fill="x")
         actions = [
+            ("Undo", self.undo),
+            ("Redo", self.redo),
             ("Add", self.add_trip),
             ("Edit", self.edit_trip),
             ("Delete", self.delete_trip),
@@ -246,6 +253,31 @@ class App(tk.Tk):
         self.statusbar = ttk.Label(self, text="", anchor="w", padding=(12, 5), foreground="#455a64")
         self.statusbar.pack(fill="x")
 
+    def _snapshot(self):
+        return copy.deepcopy([trip.to_dict() for trip in self.service.trips])
+
+    def _push_history(self):
+        self.history.append(self._snapshot())
+        if len(self.history) > 30:
+            self.history.pop(0)
+        self.future.clear()
+
+    def undo(self):
+        if not self.history:
+            return
+        self.future.append(self._snapshot())
+        self.service.replace_all([Trip.from_dict(row) for row in self.history.pop()])
+        self.refresh()
+        messagebox.showinfo("Undo", "Last change reverted.")
+
+    def redo(self):
+        if not self.future:
+            return
+        self.history.append(self._snapshot())
+        self.service.replace_all([Trip.from_dict(row) for row in self.future.pop()])
+        self.refresh()
+        messagebox.showinfo("Redo", "Change reapplied.")
+
     def refresh(self):
         self._fill_tree(sorted(self.service.trips, key=lambda t: t.id))
         self._fill_summary()
@@ -279,6 +311,7 @@ class App(tk.Tk):
             lines.append(f"  {month} spend: {total:.2f}")
         lines.append(f"  Upcoming (30 days): {len(insights['upcoming'])}")
         lines.append(f"  Forecast spend: {insights['forecast']:.2f}")
+        lines.append(f"  Projected next-month spend: {insights['projected_spend']:.2f}")
         lines.append(f"  Cost anomalies: {len(insights['anomalies'])}")
         self.summary_text.configure(state="normal")
         self.summary_text.delete("1.0", "end")
@@ -321,6 +354,7 @@ class App(tk.Tk):
         dialog = TripDialog(self)
         self.wait_window(dialog)
         if dialog.result:
+            self._push_history()
             trip = self.service.add(dialog.result)
             self.refresh()
             messagebox.showinfo("Saved", f"Trip #{trip.id} added to {trip.destination}.")
@@ -333,6 +367,7 @@ class App(tk.Tk):
         dialog = TripDialog(self, trip)
         self.wait_window(dialog)
         if dialog.result:
+            self._push_history()
             self.service.update(trip.id, dialog.result)
             self.refresh()
             messagebox.showinfo("Saved", f"Trip #{trip.id} updated.")
@@ -343,6 +378,7 @@ class App(tk.Tk):
             messagebox.showwarning("No selection", "Select a trip in the table first.")
             return
         if messagebox.askyesno("Delete", f"Delete trip #{trip.id} - {trip.destination}?"):
+            self._push_history()
             self.service.delete(trip.id)
             self.refresh()
 
@@ -407,6 +443,7 @@ class App(tk.Tk):
             valid.append(Trip.from_dict(row))
             next_id += 1
         if valid:
+            self._push_history()
             self.service.replace_all(list(self.service.trips) + valid)
             self.refresh()
         detail = f"Imported: {len(valid)}\nRejected: {len(errors)}"
@@ -420,8 +457,10 @@ class App(tk.Tk):
         rows = seed.generate(40)
         seed.write_samples(rows, DATA_DIR)
         if messagebox.askyesno("Seed data", "Replace the current dataset with 40 sample records?"):
+            self._push_history()
             self.service.replace_all([Trip.from_dict(row) for row in rows])
         elif messagebox.askyesno("Seed data", "Append the 40 sample records instead?"):
+            self._push_history()
             starting = self.service.next_id()
             for offset, row in enumerate(rows):
                 row["id"] = starting + offset

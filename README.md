@@ -106,6 +106,13 @@ The suite covers 50 cases across models, validation, storage (including corrupte
 - Automatic `.bak` snapshots on every write with a `Storage.restore_backup()` recovery path.
 - Optional fuzzy search in the console app (and typo-tolerant search in the web app).
 
+## Advanced capabilities
+
+- **Natural-language queries:** console option 3 accepts phrases such as `trips to Paris under 3000 booked`; the web search box parses the same intent on Enter.
+- **Predictive analytics:** `InsightsEngine.linear_forecast()` extrapolates next-month spend using least-squares regression.
+- **Offline PWA:** the web app is installable and caches its shell with a service worker.
+- **Undo/redo:** the GUI supports toolbar buttons and `Ctrl+Z` / `Ctrl+Y`.
+
 ## Database backends
 
 Switch between local file storage (JSON/CSV) and an SQLite database without losing data:

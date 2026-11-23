@@ -10,6 +10,7 @@ let selectedId = null;
 let editingId = null;
 let sortKey = "id";
 let sortDir = 1;
+let naturalMaxCost = null;
 
 const el = (id) => document.getElementById(id);
 
@@ -147,6 +148,25 @@ function toast(message) {
   toast.timer = setTimeout(() => node.classList.remove("show"), 2800);
 }
 
+function applyNaturalQuery() {
+  const raw = el("keyword").value.trim();
+  const lower = raw.toLowerCase();
+  naturalMaxCost = null;
+  const amount = lower.match(/(?:under|below|less than|budget|up to)\s*[$₹]?\s*([\d,]+(?:\.\d+)?)/);
+  if (amount) naturalMaxCost = Number(amount[1].replace(/,/g, ""));
+  for (const category of CATEGORIES) {
+    if (lower.includes(category.toLowerCase())) { el("categoryFilter").value = category; break; }
+  }
+  for (const status of STATUSES) {
+    if (lower.includes(status.toLowerCase())) { el("statusFilter").value = status; break; }
+  }
+  const place = lower.match(/\b(?:to|in|at|for)\s+([a-z][a-z\s]*?)(?=\s+(?:under|below|over|above|less|more|budget|this|next|with|before|after|planned|booked|completed|cancelled|leisure|business|adventure|family|cultural|solo)|$)/);
+  if (place) el("keyword").value = place[1].trim();
+  toast(naturalMaxCost !== null ? "Smart query applied (cost <= " + naturalMaxCost + ")" : "Smart query applied");
+  page = 1;
+  renderTable();
+}
+
 function similarity(left, right) {
   const a = String(left).toLowerCase();
   const b = String(right).toLowerCase();
@@ -181,6 +201,7 @@ function getFiltered() {
     }
     if (category && trip.category !== category) return false;
     if (status && trip.status !== status) return false;
+    if (naturalMaxCost !== null && trip.estimated_cost > naturalMaxCost) return false;
     return true;
   });
   filtered.sort((a, b) => {
@@ -475,12 +496,19 @@ function init() {
   el("exportBtn").addEventListener("click", exportData);
 
   el("keyword").addEventListener("input", () => { page = 1; renderTable(); });
+  el("keyword").addEventListener("keydown", (event) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      applyNaturalQuery();
+    }
+  });
   el("categoryFilter").addEventListener("change", () => { page = 1; renderTable(); });
   el("statusFilter").addEventListener("change", () => { page = 1; renderTable(); });
   el("clearBtn").addEventListener("click", () => {
     el("keyword").value = "";
     el("categoryFilter").value = "";
     el("statusFilter").value = "";
+    naturalMaxCost = null;
     page = 1;
     renderTable();
   });
@@ -499,6 +527,23 @@ function init() {
   document.addEventListener("keydown", (event) => { if (event.key === "Escape") closeModal(); });
 
   render();
+}
+
+let installPrompt = null;
+window.addEventListener("beforeinstallprompt", (event) => {
+  event.preventDefault();
+  installPrompt = event;
+  el("installBtn").hidden = false;
+});
+el("installBtn").addEventListener("click", async () => {
+  if (!installPrompt) return;
+  installPrompt.prompt();
+  await installPrompt.userChoice;
+  installPrompt = null;
+  el("installBtn").hidden = true;
+});
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js").catch(() => {}));
 }
 
 init();

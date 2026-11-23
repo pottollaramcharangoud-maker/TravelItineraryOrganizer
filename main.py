@@ -7,6 +7,7 @@ import reports
 import ui
 from insights import InsightsEngine
 from logging_config import get_logger
+from nlp import describe, run_query
 from models import Trip
 from service import ItineraryService
 from sqlite_storage import create_storage, storage_label
@@ -156,6 +157,13 @@ class App:
 
     def search(self):
         ui.section("Search / Filter")
+        if prompt_yes_no("  Use natural-language query (e.g. 'trips to Paris under 3000 next month')?"):
+            text = prompt_text("  Query: ")
+            parsed, results = run_query(self.service, text)
+            ui.success(describe(parsed))
+            ui.success(f"Found {len(results)} matching record(s).")
+            ui.table(sorted(results, key=lambda trip: trip.id))
+            return
         keyword = prompt_text("  Keyword in destination/notes (blank=any): ", allow_blank=True)
         category = None
         status = None
@@ -340,6 +348,7 @@ class App:
             print(f"  Busiest month: {busiest[0]} ({busiest[1]:.2f})")
         print(f"  Upcoming trips (next 30 days): {len(report['upcoming'])}")
         print(f"  Forecast spend: {report['forecast']:.2f}")
+        print(f"  Projected next-month spend (trend): {report['projected_spend']:.2f}")
         print(f"  Cost anomalies: {len(report['anomalies'])}")
         for trip, score in report["anomalies"]:
             print(f"    #{trip.id} {trip.destination}: {score:.2f} sigma")
