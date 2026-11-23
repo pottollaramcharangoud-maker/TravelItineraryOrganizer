@@ -1,6 +1,11 @@
+import re
 from datetime import date, datetime
+from difflib import SequenceMatcher
 
+from logging_config import get_logger
 from models import Trip
+
+logger = get_logger("service")
 
 
 class ItineraryService:
@@ -8,6 +13,7 @@ class ItineraryService:
         self.storage = storage
         self.cost_limit = cost_limit
         self.trips = self.storage.load()
+        logger.info("Service initialized with %d records", len(self.trips))
 
     def _persist(self):
         self.storage.save(self.trips)
@@ -15,6 +21,7 @@ class ItineraryService:
     def replace_all(self, trips):
         self.trips = list(trips)
         self._persist()
+        logger.info("Dataset replaced with %d records", len(self.trips))
 
     def next_id(self):
         return max((trip.id for trip in self.trips), default=0) + 1
@@ -33,6 +40,7 @@ class ItineraryService:
         )
         self.trips.append(trip)
         self._persist()
+        logger.info("Added trip %d: %s", trip.id, trip.destination)
         return trip
 
     def find(self, trip_id):
@@ -41,10 +49,12 @@ class ItineraryService:
     def update(self, trip_id, data):
         trip = self.find(trip_id)
         if not trip:
+            logger.warning("Update failed: trip %d not found", trip_id)
             return None
         for key, value in data.items():
             setattr(trip, key, value)
         self._persist()
+        logger.info("Updated trip %d", trip_id)
         return trip
 
     def delete(self, trip_id):
@@ -52,20 +62,38 @@ class ItineraryService:
         if trip:
             self.trips.remove(trip)
             self._persist()
+            logger.info("Deleted trip %d", trip_id)
         return trip
 
-    def search(self, keyword="", category=None, status=None):
+    def search(self, keyword="", category=None, status=None, fuzzy=False):
         needle = keyword.strip().lower()
-        results = []
+        scored = []
         for trip in self.trips:
-            if needle and needle not in trip.destination.lower() and needle not in trip.notes.lower():
-                continue
             if category and trip.category != category:
                 continue
             if status and trip.status != status:
                 continue
-            results.append(trip)
-        return results
+            score = 0.0
+            if needle:
+                haystack = f"{trip.destination} {trip.notes}".lower()
+                if needle in haystack:
+                    score = 1.0
+                elif fuzzy:
+                    words = re.findall(r"\w+", haystack)
+                    score = max(
+                        [SequenceMatcher(None, needle, word).ratio() for word in words]
+                        + [SequenceMatcher(None, needle, haystack).ratio()],
+                        default=0.0,
+                    )
+                    if score < 0.72:
+                        continue
+                else:
+                    continue
+            scored.append((score, trip))
+        if needle and fuzzy:
+            scored.sort(key=lambda item: (-item[0], item[1].id))
+        logger.info("Search '%s' returned %d records (fuzzy=%s)", needle, len(scored), fuzzy)
+        return [trip for _, trip in scored]
 
     def warnings(self):
         today = date.today()

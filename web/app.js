@@ -147,12 +147,38 @@ function toast(message) {
   toast.timer = setTimeout(() => node.classList.remove("show"), 2800);
 }
 
+function similarity(left, right) {
+  const a = String(left).toLowerCase();
+  const b = String(right).toLowerCase();
+  if (a === b) return 1;
+  if (!a.length || !b.length) return 0;
+  const row = Array.from({ length: b.length + 1 }, (_, index) => index);
+  for (let i = 1; i <= a.length; i++) {
+    let previous = row[0];
+    row[0] = i;
+    for (let j = 1; j <= b.length; j++) {
+      const saved = row[j];
+      row[j] = Math.min(row[j] + 1, row[j - 1] + 1, previous + (a[i - 1] === b[j - 1] ? 0 : 1));
+      previous = saved;
+    }
+  }
+  return 1 - row[b.length] / Math.max(a.length, b.length);
+}
+
 function getFiltered() {
   const keyword = el("keyword").value.trim().toLowerCase();
   const category = el("categoryFilter").value;
   const status = el("statusFilter").value;
   filtered = trips.filter((trip) => {
-    if (keyword && !trip.destination.toLowerCase().includes(keyword) && !String(trip.notes).toLowerCase().includes(keyword)) return false;
+    if (keyword) {
+      const haystack = (trip.destination + " " + String(trip.notes || "")).toLowerCase();
+      if (!haystack.includes(keyword)) {
+        if (keyword.length < 3) return false;
+        const words = haystack.split(/\W+/).filter(Boolean);
+        const score = Math.max(0, ...words.map((word) => similarity(keyword, word)));
+        if (score < 0.72) return false;
+      }
+    }
     if (category && trip.category !== category) return false;
     if (status && trip.status !== status) return false;
     return true;

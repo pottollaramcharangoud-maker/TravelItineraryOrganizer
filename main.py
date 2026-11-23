@@ -5,6 +5,7 @@ from datetime import datetime
 
 import reports
 import ui
+from logging_config import get_logger
 from models import Trip
 from service import ItineraryService
 from storage import Storage
@@ -18,6 +19,8 @@ from validation import (
     prompt_yes_no,
     validate_trip,
 )
+
+logger = get_logger("console")
 
 BASE = os.path.dirname(os.path.abspath(__file__))
 DATA_DIR = os.path.join(BASE, "data")
@@ -70,6 +73,7 @@ class App:
         return os.path.join(DATA_DIR, f"itinerary.{self.fmt}")
 
     def run(self):
+        logger.info("Console application started with %d records", len(self.service.trips))
         while True:
             ui.clear()
             ui.banner(self.fmt, len(self.service.trips))
@@ -153,7 +157,8 @@ class App:
             category = prompt_choice("Category", CATEGORIES)
         if prompt_yes_no("  Filter by status?"):
             status = prompt_choice("Status", STATUSES)
-        results = self.service.search(keyword, category, status)
+        fuzzy = bool(keyword) and prompt_yes_no("  Enable fuzzy matching?")
+        results = self.service.search(keyword, category, status, fuzzy=fuzzy)
         ui.success(f"Found {len(results)} matching record(s).")
         ui.table(sorted(results, key=lambda trip: trip.id))
 
