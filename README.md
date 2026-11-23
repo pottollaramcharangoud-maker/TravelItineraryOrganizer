@@ -103,7 +103,22 @@ The suite covers 50 cases across models, validation, storage (including corrupte
 
 - Structured file logging to `logs/app.log` with timestamps and severity levels.
 - Cross-platform advisory file locking and atomic file replacement for safe concurrent access.
+- Automatic `.bak` snapshots on every write with a `Storage.restore_backup()` recovery path.
 - Optional fuzzy search in the console app (and typo-tolerant search in the web app).
+
+## Database backends
+
+Switch between local file storage (JSON/CSV) and an SQLite database without losing data:
+
+- Console: option **14** (Toggle database backend).
+- GUI: **DB backend** button in the toolbar.
+- Configuration is persisted in `data/config.json` under `backend` (`file` or `sqlite`).
+
+## Smart insights
+
+The `InsightsEngine` produces monthly spend trends, the busiest month, anomaly detection using
+z-scores, trips in the next 30 days and a forecast spend estimate. Available through console
+option **13**, the GUI Summary tab and the web app.
 
 ## Documentation
 

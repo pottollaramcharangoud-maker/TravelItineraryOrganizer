@@ -76,6 +76,19 @@ def test_no_temp_files_left_after_save(tmp_path):
     assert not [name for name in os.listdir(str(folder)) if name.startswith(".tmp_")]
 
 
+def test_save_creates_backup_and_restore(tmp_path):
+    path = tmp_path / "trips.json"
+    store = Storage(str(path), "json")
+    first = Trip.from_dict(sample_rows(1)[0])
+    store.save([first])
+    changed = Trip.from_dict(dict(sample_rows(1)[0], destination="Changed"))
+    store.save([changed])
+    assert os.path.exists(str(path) + ".bak")
+    assert store.load()[0].destination == "Changed"
+    assert store.restore_backup() is True
+    assert store.load()[0].destination == "City 1"
+
+
 def test_fieldnames_complete():
     assert set(FIELDNAMES) == {
         "id", "destination", "start_date", "end_date",

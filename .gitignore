@@ -3,5 +3,7 @@ __pycache__/
 exports/
 logs/
 *.lock
+*.bak
+*.db
 .pytest_cache/
 .vercel

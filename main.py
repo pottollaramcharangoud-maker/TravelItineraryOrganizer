@@ -5,9 +5,11 @@ from datetime import datetime
 
 import reports
 import ui
+from insights import InsightsEngine
 from logging_config import get_logger
 from models import Trip
 from service import ItineraryService
+from sqlite_storage import create_storage, storage_label
 from storage import Storage
 from validation import (
     CATEGORIES,
@@ -40,6 +42,8 @@ MENU = [
     ("10", "Seed sample data"),
     ("11", "Toggle storage format (JSON/CSV)"),
     ("12", "Launch graphical interface (Tkinter)"),
+    ("13", "Smart insights"),
+    ("14", "Toggle database backend (File/SQLite)"),
     ("0", "Exit"),
 ]
 
@@ -52,7 +56,7 @@ def load_config():
             raise ValueError("invalid format")
         return config
     except (FileNotFoundError, json.JSONDecodeError, ValueError, OSError):
-        return {"format": "json", "cost_limit": 10000.0}
+        return {"format": "json", "cost_limit": 10000.0, "backend": "file"}
 
 
 def save_config(config):
@@ -64,9 +68,9 @@ def save_config(config):
 class App:
     def __init__(self):
         self.config = load_config()
-        self.fmt = self.config["format"]
+        self.fmt = self.config.get("format", "json")
         self.cost_limit = float(self.config.get("cost_limit", 10000.0))
-        self.storage = Storage(self._storage_path(), self.fmt)
+        self.storage = create_storage(self.config, DATA_DIR)
         self.service = ItineraryService(self.storage, self.cost_limit)
 
     def _storage_path(self):
@@ -76,7 +80,7 @@ class App:
         logger.info("Console application started with %d records", len(self.service.trips))
         while True:
             ui.clear()
-            ui.banner(self.fmt, len(self.service.trips))
+            ui.banner(storage_label(self.config), len(self.service.trips))
             ui.menu(MENU)
             try:
                 choice = input("  Select option: ").strip()
@@ -100,6 +104,8 @@ class App:
                 "10": self.seed,
                 "11": self.toggle_storage,
                 "12": self.launch_gui,
+                "13": self.insights,
+                "14": self.toggle_backend,
             }.get(choice)
             if action:
                 try:
@@ -321,6 +327,34 @@ class App:
                 row["id"] = starting + offset
             self.service.replace_all(list(self.service.trips) + [Trip.from_dict(row) for row in rows])
             ui.success("Sample records appended.")
+
+    def insights(self):
+        ui.section("Smart Insights")
+        engine = InsightsEngine(self.service)
+        report = engine.report()
+        print("  Monthly spend trend:")
+        for month, total in report["monthly_spend"]:
+            print(f"    {month} : {total:.2f}")
+        busiest = report["busiest_month"]
+        if busiest:
+            print(f"  Busiest month: {busiest[0]} ({busiest[1]:.2f})")
+        print(f"  Upcoming trips (next 30 days): {len(report['upcoming'])}")
+        print(f"  Forecast spend: {report['forecast']:.2f}")
+        print(f"  Cost anomalies: {len(report['anomalies'])}")
+        for trip, score in report["anomalies"]:
+            print(f"    #{trip.id} {trip.destination}: {score:.2f} sigma")
+
+    def toggle_backend(self):
+        new_backend = "sqlite" if self.config.get("backend", "file") != "sqlite" else "file"
+        target = create_storage({"backend": new_backend, "format": self.fmt}, DATA_DIR)
+        target.save(self.service.trips)
+        self.config["backend"] = new_backend
+        self.storage = target
+        self.service = ItineraryService(self.storage, self.cost_limit)
+        save_config(self.config)
+        label = storage_label(self.config)
+        logger.info("Storage backend switched to %s", label)
+        ui.success(f"Database backend switched to {label} (data preserved).")
 
     def launch_gui(self):
         try:

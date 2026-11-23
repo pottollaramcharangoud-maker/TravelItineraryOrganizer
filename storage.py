@@ -2,6 +2,7 @@ import contextlib
 import csv
 import json
 import os
+import shutil
 import tempfile
 
 try:
@@ -86,6 +87,14 @@ class Storage:
     def save(self, trips):
         self._write([trip.to_dict() for trip in trips])
 
+    def restore_backup(self):
+        backup = self.path + ".bak"
+        if not os.path.exists(backup):
+            return False
+        shutil.copy2(backup, self.path)
+        logger.warning("Restored %s from backup", self.path)
+        return True
+
     def _write(self, rows):
         folder = os.path.dirname(self.path) or "."
         with _locked(self.path):
@@ -99,6 +108,8 @@ class Storage:
                         writer.writeheader()
                         for row in rows:
                             writer.writerow({key: row.get(key, "") for key in FIELDNAMES})
+                if os.path.exists(self.path):
+                    shutil.copy2(self.path, self.path + ".bak")
                 os.replace(temporary, self.path)
                 logger.info("Saved %d records to %s", len(rows), self.path)
             except Exception:

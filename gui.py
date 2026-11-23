@@ -7,9 +7,11 @@ from tkinter import filedialog, messagebox, ttk
 
 import reports
 import seed
+from insights import InsightsEngine
 from main import DATA_DIR, EXPORT_DIR, load_config, save_config
 from models import Trip
 from service import ItineraryService
+from sqlite_storage import create_storage, storage_label
 from storage import Storage
 from validation import CATEGORIES, STATUSES, validate_trip
 
@@ -131,9 +133,10 @@ class App(tk.Tk):
         self.configure(bg="#f4f6f8")
 
         config = load_config()
-        self.fmt = config["format"]
+        self.config = config
+        self.fmt = config.get("format", "json")
         self.cost_limit = float(config.get("cost_limit", 10000.0))
-        self.storage = Storage(os.path.join(DATA_DIR, f"itinerary.{self.fmt}"), self.fmt)
+        self.storage = create_storage(config, DATA_DIR)
         self.service = ItineraryService(self.storage, self.cost_limit)
 
         self.keyword = tk.StringVar()
@@ -163,6 +166,7 @@ class App(tk.Tk):
             ("Import CSV", self.import_csv),
             ("Seed data", self.seed_data),
             ("Toggle storage", self.toggle_storage),
+            ("DB backend", self.toggle_backend),
             ("Refresh", self.refresh),
         ]
         for label, command in actions:
@@ -269,6 +273,13 @@ class App(tk.Tk):
         lines += ["", "HIGHEST ESTIMATED COSTS", "-" * 50]
         for trip in data["top_costs"]:
             lines.append(f"  {trip.destination:<24} {trip.estimated_cost:>10.2f}")
+        insights = InsightsEngine(self.service).report()
+        lines += ["", "SMART INSIGHTS", "-" * 50]
+        for month, total in insights["monthly_spend"]:
+            lines.append(f"  {month} spend: {total:.2f}")
+        lines.append(f"  Upcoming (30 days): {len(insights['upcoming'])}")
+        lines.append(f"  Forecast spend: {insights['forecast']:.2f}")
+        lines.append(f"  Cost anomalies: {len(insights['anomalies'])}")
         self.summary_text.configure(state="normal")
         self.summary_text.delete("1.0", "end")
         self.summary_text.insert("1.0", "\n".join(lines))
@@ -282,7 +293,7 @@ class App(tk.Tk):
     def _set_status(self, showing=None):
         shown = showing if showing is not None else len(self.tree.get_children())
         self.statusbar.configure(
-            text=f"  Records: {len(self.service.trips)}   Showing: {shown}   Storage: {self.fmt.upper()}   Cost limit: {self.cost_limit:.2f}"
+            text=f"  Records: {len(self.service.trips)}   Showing: {shown}   Storage: {storage_label(self.config)}   Cost limit: {self.cost_limit:.2f}"
         )
 
     def sort_by(self, key):
@@ -420,6 +431,17 @@ class App(tk.Tk):
         self.refresh()
         messagebox.showinfo("Seed complete", f"Dataset now has {len(self.service.trips)} records.")
 
+    def toggle_backend(self):
+        new_backend = "sqlite" if self.config.get("backend", "file") != "sqlite" else "file"
+        target = create_storage({"backend": new_backend, "format": self.fmt}, DATA_DIR)
+        target.save(self.service.trips)
+        self.config["backend"] = new_backend
+        self.storage = target
+        self.service = ItineraryService(self.storage, self.cost_limit)
+        save_config(self.config)
+        self.refresh()
+        messagebox.showinfo("Database backend", f"Backend switched to {storage_label(self.config)}; data preserved.")
+
     def toggle_storage(self):
         new_fmt = "csv" if self.fmt == "json" else "json"
         target = Storage(os.path.join(DATA_DIR, f"itinerary.{new_fmt}"), new_fmt)
@@ -427,9 +449,8 @@ class App(tk.Tk):
         self.fmt = new_fmt
         self.storage = target
         self.service = ItineraryService(self.storage, self.cost_limit)
-        config = load_config()
-        config["format"] = new_fmt
-        save_config(config)
+        self.config["format"] = new_fmt
+        save_config(self.config)
         self.refresh()
         messagebox.showinfo("Storage", f"Storage switched to {new_fmt.upper()}; data preserved.")
 
