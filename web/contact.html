@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact - Travel Itinerary Organizer</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <div class="logo">T</div>
+      <div><h1>Travel Itinerary Organizer</h1><p>StudentLife Hack &middot; Project #52</p></div>
+    </div>
+    <div class="header-actions"><a class="linkbtn" href="index.html">Open app</a></div>
+  </header>
+  <nav class="site-nav">
+    <a href="index.html">App</a>
+    <a href="about.html">About</a>
+    <a href="guide.html">User Guide</a>
+    <a class="active" href="contact.html">Contact</a>
+  </nav>
+  <main class="page">
+    <div class="page-hero">
+      <h2>Contact &amp; feedback</h2>
+      <p>Reach the project author, explore the source code or leave a short note. Feedback is stored only in this browser because the site has no server.</p>
+    </div>
+    <div class="page-grid">
+      <div class="page-card"><h4>Author</h4><p>P. Ram Charan Goud<br>StudentLife Hack &middot; Project #52</p></div>
+      <div class="page-card"><h4>Source</h4><p><a href="https://github.com/pottollaramcharangoud-maker/TravelItineraryOrganizer">GitHub repository</a></p></div>
+      <div class="page-card"><h4>Deployment</h4><p><a href="https://vercel.com/pottollaramcharangoud-maker/travel-itinerary-organizer">Vercel project</a></p></div>
+      <div class="page-card"><h4>Roll number</h4><p>26MVCSDR0072</p></div>
+    </div>
+    <h3>Send a note</h3>
+    <form class="contact-form" id="feedbackForm">
+      <label>Your name<input type="text" id="fbName" maxlength="80" required></label>
+      <label>Message<textarea id="fbMessage" maxlength="500" rows="4" required></textarea></label>
+      <button class="btn primary" type="submit">Save note</button>
+    </form>
+    <p id="fbStatus" class="formerror"></p>
+  </main>
+  <footer>StudentLife Hack &middot; Project #52 &middot; Travel &amp; Transport</footer>
+  <script>
+    document.getElementById("feedbackForm").addEventListener("submit", function (event) {
+      event.preventDefault();
+      const note = {
+        name: document.getElementById("fbName").value.trim(),
+        message: document.getElementById("fbMessage").value.trim(),
+        time: new Date().toISOString()
+      };
+      const saved = JSON.parse(localStorage.getItem("travel_feedback") || "[]");
+      saved.push(note);
+      localStorage.setItem("travel_feedback", JSON.stringify(saved));
+      document.getElementById("fbStatus").textContent = "Thank you, " + note.name + ". Your note was saved in this browser.";
+      document.getElementById("feedbackForm").reset();
+    });
+  </script>
+</body>
+</html>

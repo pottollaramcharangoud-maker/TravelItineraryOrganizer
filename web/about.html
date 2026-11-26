@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About - Travel Itinerary Organizer</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <div class="logo">T</div>
+      <div><h1>Travel Itinerary Organizer</h1><p>StudentLife Hack &middot; Project #52</p></div>
+    </div>
+    <div class="header-actions"><a class="linkbtn" href="https://github.com/pottollaramcharangoud-maker/TravelItineraryOrganizer">GitHub</a></div>
+  </header>
+  <nav class="site-nav">
+    <a href="index.html">App</a>
+    <a class="active" href="about.html">About</a>
+    <a href="guide.html">User Guide</a>
+    <a href="contact.html">Contact</a>
+  </nav>
+  <main class="page">
+    <div class="page-hero">
+      <h2>About this project</h2>
+      <p>A focused Python application that organizes destinations, dates, notes and estimated costs with strict validation, reliable local storage, analytics and threshold warnings. It runs as a console app, a Tkinter desktop GUI and this installable offline web client.</p>
+    </div>
+    <h3>What it does</h3>
+    <div class="page-grid">
+      <div class="page-card"><h4>Organize</h4><p>Record trips with destination, dates, category, notes and cost, then edit or remove them.</p></div>
+      <div class="page-card"><h4>Validate</h4><p>Every field is checked for type, format and range before it reaches storage.</p></div>
+      <div class="page-card"><h4>Find</h4><p>Search by keyword, category or status, use fuzzy matching, or ask in plain English.</p></div>
+      <div class="page-card"><h4>Analyse</h4><p>Totals, averages, distributions, anomaly flags and a spend forecast.</p></div>
+      <div class="page-card"><h4>Persist</h4><p>JSON/CSV files or a transactional SQLite database, with locking and backups.</p></div>
+      <div class="page-card"><h4>Export</h4><p>Markdown, CSV, JSON and plain-text audit reports.</p></div>
+    </div>
+    <h3>Architecture</h3>
+    <table class="page-table">
+      <thead><tr><th>Layer</th><th>Responsibility</th></tr></thead>
+      <tbody>
+        <tr><td>Presentation</td><td>Console, Tkinter GUI, web client</td></tr>
+        <tr><td>Application</td><td>Menu dispatch, input wrappers, natural-language query</td></tr>
+        <tr><td>Domain / Service</td><td>CRUD, search, summaries, warnings and insights</td></tr>
+        <tr><td>Persistence</td><td>JSON/CSV with locking or SQLite with transactions</td></tr>
+      </tbody>
+    </table>
+    <h3>Technology</h3>
+    <p>Python 3.10+ standard library, Tkinter, SQLite, pytest for 76 automated tests, Git and GitHub for source control, and Vercel for web hosting. The web client is a PWA with an offline service worker.</p>
+    <h3>Project links</h3>
+    <p><a href="https://github.com/pottollaramcharangoud-maker/TravelItineraryOrganizer">Source repository</a> &middot; <a href="guide.html">User guide</a> &middot; <a href="contact.html">Contact</a></p>
+  </main>
+  <footer>StudentLife Hack &middot; Project #52 &middot; Travel &amp; Transport</footer>
+</body>
+</html>

@@ -113,6 +113,11 @@ The suite covers 50 cases across models, validation, storage (including corrupte
 - **Offline PWA:** the web app is installable and caches its shell with a service worker.
 - **Undo/redo:** the GUI supports toolbar buttons and `Ctrl+Z` / `Ctrl+Y`.
 
+## Website pages
+
+The `web/` folder contains the main app plus three supporting pages, all linked by a shared navigation bar:
+`index.html` (app), `about.html`, `guide.html` and `contact.html`. The contact form stores notes in browser localStorage.
+
 ## Database backends
 
 Switch between local file storage (JSON/CSV) and an SQLite database without losing data:

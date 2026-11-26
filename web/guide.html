@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Guide - Travel Itinerary Organizer</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <div class="logo">T</div>
+      <div><h1>Travel Itinerary Organizer</h1><p>StudentLife Hack &middot; Project #52</p></div>
+    </div>
+    <div class="header-actions"><a class="linkbtn" href="index.html">Open app</a></div>
+  </header>
+  <nav class="site-nav">
+    <a href="index.html">App</a>
+    <a href="about.html">About</a>
+    <a class="active" href="guide.html">User Guide</a>
+    <a href="contact.html">Contact</a>
+  </nav>
+  <main class="page">
+    <div class="page-hero">
+      <h2>User guide</h2>
+      <p>Everything you need to run the console application, the Tkinter GUI and this web client, plus the validation rules that keep your data clean.</p>
+    </div>
+    <h3>Getting started</h3>
+    <div class="page-card">
+      <p>Install Python 3.10 or newer. Clone the repository, then run <strong>python main.py</strong> for the console app or <strong>python run_gui.py</strong> for the desktop GUI. No third-party package is needed at run time. Install <strong>requirements-dev.txt</strong> only if you want to run the 76 automated tests with <strong>python -m pytest -q</strong>.</p>
+    </div>
+    <h3>Console menu</h3>
+    <table class="page-table">
+      <thead><tr><th>Option</th><th>Action</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>Add a validated trip</td></tr>
+        <tr><td>2</td><td>View all trips in a paginated table</td></tr>
+        <tr><td>3</td><td>Search / filter, including natural-language queries</td></tr>
+        <tr><td>4</td><td>Update a trip; blank fields keep the current value</td></tr>
+        <tr><td>5</td><td>Delete a trip after confirmation</td></tr>
+        <tr><td>6</td><td>Summary and analytics</td></tr>
+        <tr><td>7</td><td>Threshold warnings</td></tr>
+        <tr><td>8</td><td>Export Markdown, CSV, JSON or audit log</td></tr>
+        <tr><td>9</td><td>Bulk import CSV with error log</td></tr>
+        <tr><td>10</td><td>Seed 40 sample records</td></tr>
+        <tr><td>11</td><td>Toggle JSON/CSV storage format</td></tr>
+        <tr><td>12</td><td>Launch the Tkinter GUI</td></tr>
+        <tr><td>13</td><td>Smart insights and forecast</td></tr>
+        <tr><td>14</td><td>Toggle file storage / SQLite backend</td></tr>
+      </tbody>
+    </table>
+    <h3>Using this web client</h3>
+    <div class="page-grid">
+      <div class="page-card"><h4>Add and edit</h4><p>Use the toolbar buttons. Select a row, then choose Edit or Delete. Double-click a row to edit quickly.</p></div>
+      <div class="page-card"><h4>Search</h4><p>Type a keyword and press Enter to parse a sentence such as "trips to Paris under 3000 booked".</p></div>
+      <div class="page-card"><h4>Tabs</h4><p>Summary &amp; Analytics shows metrics and charts; Warnings lists overdue and high-cost entries.</p></div>
+      <div class="page-card"><h4>Offline</h4><p>The app caches its shell, so it opens again without a network connection. Use Install app in the header.</p></div>
+    </div>
+    <h3>Validation rules</h3>
+    <ul>
+      <li>Destination is required and limited to 200 characters.</li>
+      <li>Dates use YYYY-MM-DD and the end date cannot precede the start date.</li>
+      <li>Estimated cost must be numeric and non-negative.</li>
+      <li>Category and status must come from the predefined lists.</li>
+      <li>Imported CSV rows use the same rules; rejected rows are listed with line numbers.</li>
+    </ul>
+  </main>
+  <footer>StudentLife Hack &middot; Project #52 &middot; Travel &amp; Transport</footer>
+</body>
+</html>

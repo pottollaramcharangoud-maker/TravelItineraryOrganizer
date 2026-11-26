@@ -79,4 +79,24 @@ tbody tr:hover { background: #f8fafc; }
 .toast { position: fixed; bottom: 24px; right: 24px; background: var(--navy); color: #fff; padding: 12px 18px; border-radius: 10px; font-size: 13px; opacity: 0; transform: translateY(10px); transition: .25s; pointer-events: none; z-index: 30; }
 .toast.show { opacity: 1; transform: translateY(0); }
 footer { text-align: center; color: var(--muted); font-size: 12px; padding: 24px; }
-@media (max-width: 640px) { .wrap { padding: 12px; } .topbar { padding: 14px; } .twocol { grid-template-columns: 1fr; } }
+.site-nav { max-width: 1280px; margin: 0 auto; padding: 14px 24px 0; display: flex; gap: 8px; flex-wrap: wrap; }
+.site-nav a { padding: 9px 16px; border-radius: 8px; text-decoration: none; font-size: 13px; font-weight: 600; color: var(--muted); border: 1px solid var(--line); background: #fff; }
+.site-nav a:hover { color: var(--blue); border-color: var(--sky); }
+.site-nav a.active { color: #fff; background: var(--blue); border-color: var(--blue); }
+.page { max-width: 1040px; margin: 0 auto; padding: 28px 24px 60px; }
+.page-hero { background: linear-gradient(120deg, #0f172a, #0e70a5); color: #fff; border-radius: 14px; padding: 34px; margin-bottom: 26px; }
+.page-hero h2 { margin: 0 0 10px; font-size: 28px; }
+.page-hero p { margin: 0; max-width: 700px; line-height: 1.6; opacity: .9; }
+.page h3 { font-size: 18px; margin: 30px 0 14px; color: var(--navy); }
+.page p, .page li { line-height: 1.7; color: #475569; }
+.page-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; }
+.page-card { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 18px; box-shadow: 0 2px 8px rgba(15,23,42,.04); }
+.page-card h4 { margin: 0 0 8px; color: var(--blue); font-size: 15px; }
+.page-card p { margin: 0; font-size: 13px; }
+.page-table { width: 100%; border-collapse: collapse; background: #fff; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; font-size: 13px; }
+.page-table th { background: #f8fafc; text-align: left; padding: 10px 12px; color: #475569; cursor: default; }
+.page-table td { padding: 10px 12px; border-top: 1px solid #f1f5f9; }
+.contact-form { max-width: 520px; background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 20px; }
+.contact-form label { display: block; font-size: 12px; font-weight: 600; margin-bottom: 12px; color: #475569; }
+.contact-form input, .contact-form textarea { display: block; width: 100%; margin-top: 5px; }
+@media (max-width: 640px) { .wrap { padding: 12px; } .topbar { padding: 14px; } .twocol { grid-template-columns: 1fr; } .page { padding: 18px 14px 40px; } }
